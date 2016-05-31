@@ -32,7 +32,14 @@ public class Solution {
         @Override
         public void run()
         {
+            while(!isStopped){
+                try{
+                    drugsController.buy(getRandomDrug(),getRandomCount());
+                    Thread.sleep(300);
+                } catch (InterruptedException e){
 
+                }
+            }
         }
     }
 
@@ -41,7 +48,14 @@ public class Solution {
         @Override
         public void run()
         {
-
+            while (!isStopped){
+                try{
+                    drugsController.sell(getRandomDrug(),getRandomCount());
+                    Thread.sleep(100);
+                } catch (InterruptedException e){
+                    
+                }
+            }
         }
     }
 
