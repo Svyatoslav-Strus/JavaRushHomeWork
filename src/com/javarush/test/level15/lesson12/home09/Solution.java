@@ -20,58 +20,50 @@ obj name
 double 3.14
 */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import java.util.Scanner;
-
-class Main {
-    public static void main(String[] args)
+public class Solution {
+    public static void main(String [] args) throws IOException
     {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int[] A = new int[n];
-        int[] B = new int[n];
-        int maxB = 0;
-        int maxA = 0;
-        int maxJ = 0;
-        int maxI = 0;
 
-        for (int ai = 0; ai < n; ai++)
-        {
-            if (scanner.hasNextInt())
-            {
-                A[ai] = scanner.nextInt();
-                if (maxA < A[ai])
-                {
-                    maxA = A[ai]; maxI = ai;
-                }
-            }
-        }
-        for (int bi = 0; bi < n; bi++)
-        {
-            if (scanner.hasNextInt())
-            {
-                B[bi] = scanner.nextInt();
-                if ( maxB <= B[bi] )
-                {
-                    maxB = B[bi]; maxJ = bi;
-                }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = reader.readLine();
+        String afterQuestionMark = url.substring(url.indexOf("?")+1);
+        String [] tokens = afterQuestionMark.split("(\\&+)|(\\?+)");
+
+        ArrayList<String> objList = new ArrayList<String>();
+        Pattern objMutch = Pattern.compile("^obj=.*");
+        for(String a:tokens){
+            if(!a.equals("")){
+                Matcher matcher = objMutch.matcher(a);
+                if(matcher.find()){ objList.add(a.substring(a.indexOf("=")+1)); }
+                if(a.contains("=")){ System.out.print(a.substring(0,(a.indexOf("="))) +" "); }
+                else {System.out.print(a+" ");}
             }
         }
 
-        scanner.close();
-        int maxInew = 0;
-        int max = maxB + A[0];
-        for (int i = 1; i <= maxJ; i++)
-        {
-            if (max < (maxB + A[i]))
-            {
-                max = maxB + A[i];
-                maxInew = i;
-            }
+        Pattern doublePattern = Pattern.compile("[0-9.]");
+        Pattern stringPattern = Pattern.compile("[A-Za-z]");
+
+        System.out.println();
+        for(String a:objList){
+            Matcher matcher = stringPattern.matcher(a);
+            Matcher matcher1 = doublePattern.matcher(a);
+            if(matcher.find()){alert(a);}
+            else  if(matcher1.find()){alert(Double.parseDouble(a));}
         }
+    }
 
-        System.out.println(maxInew);
-        System.out.println(maxJ);
+    public static void alert(double value) {
+        System.out.println("double " + value);
+    }
 
+    public static void alert(String value) {
+        System.out.println("String " + value);
     }
 }
