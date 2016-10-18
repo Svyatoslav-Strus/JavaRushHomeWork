@@ -8,7 +8,8 @@ package com.javarush.test.level18.lesson10.home10;
 В папке, где находятся все прочтенные файлы, создать файл без приставки [.partN]. Например, Lion.avi
 В него переписать все байты из файлов-частей используя буфер.
 Файлы переписывать в строгой последовательности, сначала первую часть, потом вторую, ..., в конце - последнюю.
-Закрыть потоки. Не использовать try-with-resources
+Закрыть все потоки ввода-вывода
+Темповые файлы создавать нельзя, т.к. на сервере заблокирована возможность создания каких любо файлов
 */
 
 import java.io.*;
@@ -17,32 +18,28 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Solution {
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        Set<File> fileSet = new TreeSet<>();
-
-        while (!reader.readLine().equals("end")){
-            File file = new File(reader.readLine());
-            fileSet.add(file);
+        String name;
+        Set<File> fileset = new TreeSet<>();
+        while (!(name = reader.readLine()).equals("end")) {
+            File file = new File(name);
+            fileset.add(file);
         }
-
-        Iterator<File> fileIterator = fileSet.iterator();
-        String folder = fileIterator.next().getAbsolutePath();
+        reader.close();
+        Iterator<File> itr = fileset.iterator();
+        String folder = itr.next().getAbsolutePath();
         folder = folder.substring(0, folder.length() - 6);
         FileOutputStream resultFile = new FileOutputStream(folder, true);
-
-        for (File file : fileSet){
+        for (File file : fileset) {
             FileInputStream in = new FileInputStream(file);
-            byte[] buffer = new byte [in.available()];
-            while (in.available() > 0){
+            byte[] buffer = new byte[in.available()];
+            while (in.available() > 0) {
                 in.read(buffer);
                 resultFile.write(buffer);
             }
             in.close();
         }
         resultFile.close();
-        reader.close();
     }
 }
