@@ -1,6 +1,9 @@
 package com.javarush.test.level19.lesson03.task04;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 /* И еще один адаптер
@@ -13,7 +16,31 @@ import java.util.Scanner;
 */
 
 public class Solution {
-    public static class PersonScannerAdapter {
+    public static class PersonScannerAdapter implements PersonScanner {
+        private Scanner scanner;
+        PersonScannerAdapter(Scanner scanner){
+            this.scanner = scanner;
+        }
 
+        @Override
+        public Person read() throws IOException
+        {
+            String str = scanner.nextLine();
+            String[] buf = str.split(" ");
+
+            Calendar calendar = new GregorianCalendar(Integer.parseInt(buf[5]), Integer.parseInt(buf[4]) - 1, Integer.parseInt(buf[3]));
+
+            Date date = calendar.getTime();
+
+            Person person = new Person(buf[1], buf[2], buf[0], date);
+
+            return person;
+        }
+
+        @Override
+        public void close() throws IOException
+        {
+            this.scanner.close();
+        }
     }
 }
