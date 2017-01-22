@@ -1,5 +1,9 @@
 package com.javarush.test.level19.lesson10.bonus01;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +33,50 @@ file1:         file2:             результат:(lines)
 public class Solution {
     public static List<LineItem> lines = new ArrayList<LineItem>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader file1 = new BufferedReader(new FileReader(reader.readLine()));
+        BufferedReader file2 = new BufferedReader(new FileReader(reader.readLine()));
+        reader.close();
+
+        ArrayList<String> firstList = new ArrayList<>();
+        ArrayList<String> secondList = new ArrayList<>();
+
+        while (file1.ready()){
+            firstList.add(file1.readLine());
+        }
+
+        while (file2.ready()){
+            secondList.add(file2.readLine());
+        }
+
+        int j = 0;
+        for (int i = 0; i < firstList.size(); i++){
+            if (j >= secondList.size()) {
+                lines.add(new LineItem(Type.REMOVED, firstList.get(i)));
+                break;
+            } else
+            if (firstList.get(i).equals(secondList.get(j))) {
+                lines.add(new LineItem(Type.SAME, firstList.get(i)));
+                j++;
+            } else
+            if (j < (secondList.size() - 1) && firstList.get(i).equals(secondList.get(j + 1))) {
+                lines.add(new LineItem(Type.ADDED, secondList.get(j)));
+                j++;
+                i--;
+            } else
+            if (i < (firstList.size() - 1) && firstList.get(i + 1).equals(secondList.get(j))) {
+                lines.add(new LineItem(Type.REMOVED, firstList.get(i)));
+            }
+        }
+        if (lines.get(lines.size() - 1).type == Type.SAME && j <= (secondList.size() - 1) ) {
+            lines.add(new LineItem(Type.ADDED, secondList.get(j)));
+        }
+
+        file1.close();
+        file2.close();
+        reader.close();
     }
 
 
